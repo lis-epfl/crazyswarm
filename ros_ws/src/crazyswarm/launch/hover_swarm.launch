@@ -32,11 +32,11 @@
         kalman:
           resetEstimation: 1
       # tracking
-      motion_capture_type: "vicon" # one of none,vicon,optitrack,qualisys,vrpn
+      motion_capture_type: "optitrack" # one of none,vicon,optitrack,qualisys,vrpn
       object_tracking_type: "libobjecttracker" # one of motionCapture,libobjecttracker
-      send_position_only: False # set to False to send position+orientation; set to True to send position only
-      vicon_host_name: "vicon"
-      # optitrack_host_name: "optitrack"
+      send_position_only: True # set to False to send position+orientation; set to True to send position only
+      # vicon_host_name: "vicon"
+      optitrack_host_name: "192.168.0.249"
       # qualisys_host_name: "10.0.5.219"
       # qualisys_base_port: 22222
       # vrpn_host_name: "vicon"
@@ -59,6 +59,9 @@
   </node>
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find crazyswarm)/launch/test.rviz"/>
+
+  <node pkg="rosbag" type="record" name="logger"
+        args="-o $(find crazyswarm)/pos_log /tf -e '/cf(.*)'"/>
 
   <!-- <node pkg="rqt_plot" type="rqt_plot" name="rqt_plot_x" args="/cf2/log1/values[0]"/> -->
   <!-- <node pkg="rqt_plot" type="rqt_plot" name="rqt_plot_roll" args="/cf1/log1/values[2] /cf1/log1/values[3]"/> -->
