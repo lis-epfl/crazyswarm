@@ -14,30 +14,20 @@ if __name__ == '__main__':
     # x0 = args.x0
     # y0 = args.y0
     # N = args.N
-    N_x = 4
-    N_y = 4
-
-    d_x = 0.5
-    d_y = 0.5
-
-    X = np.arange(0, N_x) * d_x
-    Y = np.arange(0, N_y) * d_y
+    r = 1.5
+    x0, y0 = 2.0, 0.0
+    cf_ids = [3, 4, 5, 6, 7] 
+    N = len(cf_ids)
 
     cfs = []
-    id = 1
-    channel = 80
-    d_channel = 20
-
-    for x in X:
-        for y in Y:
-            if id % 15 == 0:
-                channel += d_channel
-            cf = {'id': id,
-                  'channel': channel,
-                  'initialPosition': [float(x), float(y), 0.0],
-                  'type': 'defaultSingleMarker'}
-            cfs.append(cf)
-            id += 1
+    for i, id in enumerate(cf_ids):
+        x = x0 + r * np.cos(2 * np.pi * i / N)
+        y = y0 + r * np.sin(2 * np.pi * i / N)
+        cf = {'id': id,
+              'channel': 80,
+              'initialPosition': [float(x), float(y), 0.0],
+              'type': 'defaultSingleMarker'}
+        cfs.append(cf)
 
     yaml_dict = {'crazyflies': cfs}
     with open('allCrazyflies.yaml', 'w') as file:
