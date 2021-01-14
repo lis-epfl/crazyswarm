@@ -6,7 +6,8 @@ import yaml
 import rospy
 import numpy as np
 import time
-import tf_conversions
+# import tf_conversions
+from scipy.spatial.transform import Rotation
 from std_srvs.srv import Empty
 import std_msgs
 from crazyflie_driver.srv import *
@@ -380,7 +381,7 @@ class Crazyflie:
         self.cmdFullStateMsg.acc.x              = acc[0]
         self.cmdFullStateMsg.acc.y              = acc[1]
         self.cmdFullStateMsg.acc.z              = acc[2]
-        self.cmdFullStateMsg.pose.orientation   = geometry_msgs.msg.Quaternion(*tf_conversions.transformations.quaternion_from_euler(0, 0, yaw))
+        self.cmdFullStateMsg.pose.orientation   = geometry_msgs.msg.Quaternion(*Rotation.from_euler('xyz', [0, 0, yaw]).as_quat())
         self.cmdFullStateMsg.twist.angular.x    = omega[0]
         self.cmdFullStateMsg.twist.angular.y    = omega[1]
         self.cmdFullStateMsg.twist.angular.z    = omega[2]
