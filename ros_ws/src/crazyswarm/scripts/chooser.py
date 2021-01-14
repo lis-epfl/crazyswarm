@@ -1,5 +1,5 @@
 import argparse
-import Tkinter
+import tkinter
 import yaml
 import os
 import subprocess
@@ -75,26 +75,26 @@ if __name__ == '__main__':
 	xmax, ymax = max(pixel_x), max(pixel_y)
 
 	# construct the main window
-	top = Tkinter.Tk()
+	top = tkinter.Tk()
 	top.title('Crazyflie Chooser')
 
 	# construct the frame containing the absolute-positioned checkboxes
 	width = xmax - xmin + 50 # account for checkbox + text width
 	height = ymax - ymin + 50 # account for checkbox + text height
-	frame = Tkinter.Frame(top, width=width, height=height)
+	frame = tkinter.Frame(top, width=width, height=height)
 
-	class CFWidget(Tkinter.Frame):
+	class CFWidget(tkinter.Frame):
 		def __init__(self, parent, name):
-			Tkinter.Frame.__init__(self, parent)
-			self.checked = Tkinter.BooleanVar()
-			checkbox = Tkinter.Checkbutton(self, variable=self.checked, command=save,
+			tkinter.Frame.__init__(self, parent)
+			self.checked = tkinter.BooleanVar()
+			checkbox = tkinter.Checkbutton(self, variable=self.checked, command=save,
 				padx=0, pady=0)
 			checkbox.grid(row=0, column=0, sticky='E')
-			nameLabel = Tkinter.Label(self, text=name, padx=0, pady=0)
+			nameLabel = tkinter.Label(self, text=name, padx=0, pady=0)
 			nameLabel.grid(row=0, column=1, sticky='W')
-			self.batteryLabel = Tkinter.Label(self, text="", fg="#999999", padx=0, pady=0)
+			self.batteryLabel = tkinter.Label(self, text="", fg="#999999", padx=0, pady=0)
 			self.batteryLabel.grid(row=1, column=0, columnspan=2, sticky='E')
-			self.versionLabel = Tkinter.Label(self, text="", fg="#999999", padx=0, pady=0)
+			self.versionLabel = tkinter.Label(self, text="", fg="#999999", padx=0, pady=0)
 			self.versionLabel.grid(row=2, column=0, columnspan=2, sticky='E')
 
 	# construct all the checkboxes
@@ -158,10 +158,10 @@ if __name__ == '__main__':
 		save()
 
 	def mkbutton(parent, name, command):
-		button = Tkinter.Button(parent, text=name, command=command)
+		button = tkinter.Button(parent, text=name, command=command)
 		button.pack(side='left')
 
-	buttons = Tkinter.Frame(top)
+	buttons = tkinter.Frame(top)
 	mkbutton(buttons, "Clear", clear)
 	mkbutton(buttons, "Fill", fill)
 
@@ -253,7 +253,7 @@ if __name__ == '__main__':
 	# 			color = '#FF0000'
 	# 		widgets[addr].versionLabel.config(foreground=color, text=str(v[0])[0:3] + "," + str(v[1])[0:3])
 
-	scriptButtons = Tkinter.Frame(top)
+	scriptButtons = tkinter.Frame(top)
 	mkbutton(scriptButtons, "battery", checkBattery)
 	# currently not supported
 	# mkbutton(scriptButtons, "version", checkVersion)
