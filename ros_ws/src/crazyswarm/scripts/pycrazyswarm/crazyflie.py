@@ -302,6 +302,16 @@ class Crazyflie:
         position, quaternion = self.tf.lookupTransform("/world", "/cf" + str(self.id), rospy.Time(0))
         return np.array(position)
 
+    def velocity(self, dt=0.1):
+        """Returns velocity based on measurement from motion capture.
+
+        Returns:
+            position (np.array[3]): Averaged velocity over 0.1 seconds. Meters per second.
+        """
+        self.tf.waitForTransform("/world", "/cf" + str(self.id), rospy.Time(0), rospy.Duration(10))
+        velocity = self.tf.lookupTwist(self.prefix, "/world", rospy.Time(0), rospy.Duration(dt))[0]
+        return np.array(velocity)
+
     def getParam(self, name):
         """Returns the current value of the onboard named parameter.
 
