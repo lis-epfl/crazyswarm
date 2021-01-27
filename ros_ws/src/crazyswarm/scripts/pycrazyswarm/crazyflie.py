@@ -11,7 +11,7 @@ from scipy.spatial.transform import Rotation
 from std_srvs.srv import Empty
 import std_msgs
 from crazyflie_driver.srv import *
-from crazyflie_driver.msg import TrajectoryPolynomialPiece, FullState, Position, VelocityWorld
+from crazyflie_driver.msg import TrajectoryPolynomialPiece, FullState, Position, VelocityWorld, Hover
 from tf import TransformListener
 from .visualizer import visNull
 
@@ -113,6 +113,11 @@ class Crazyflie:
         self.cmdPositionMsg = Position()
         self.cmdPositionMsg.header.seq = 0
         self.cmdPositionMsg.header.frame_id = "/world"
+
+        self.cmdHoverPublisher = rospy.Publisher(prefix + "/cmd_hover", Hover, queue_size=1)
+        self.cmdHoverMsg = Hover()
+        self.cmdHoverMsg.header.seq = 0
+        self.cmdHoverMsg.header.frame_id = "/world"
 
         self.cmdVelocityWorldPublisher = rospy.Publisher(prefix + "/cmd_velocity_world", VelocityWorld, queue_size=1)
         self.cmdVelocityWorldMsg = VelocityWorld()
@@ -490,6 +495,31 @@ class Crazyflie:
         self.cmdPositionMsg.z   = pos[2]
         self.cmdPositionMsg.yaw = yaw
         self.cmdPositionPublisher.publish(self.cmdPositionMsg)
+
+    def cmdHover(self, vx, vy, yawRate, zDistance):
+        """Sends a streaming hover controller setpoint command.
+
+        In this mode, the PC specifies desired x and y velocity in the body frame
+        as well as yaw rate and a distance from the ground.
+
+        NOTE: the Mellinger controller is Crazyswarm's default controller, but
+        it has not been tuned (or even tested) for hover control mode.
+        Switch to the PID controller by changing
+        `firmwareParams.stabilizer.controller` to `1` in your launch file.
+
+        Args:
+            vx (float): Velocity in body x direction. Meters / second
+            vy (float): Velocity in body y direction. Meters / second
+            yawRate (float): Yaw angle rate. Degrees / second
+            zDistance (float): Distance above ground. Meters 
+        """
+        self.cmdHoverMsg.header.stamp = rospy.Time.now()
+        self.cmdHoverMsg.header.seq += 1
+        self.cmdHoverMsg.vx        = vx
+        self.cmdHoverMsg.vy        = vy
+        self.cmdHoverMsg.yawrate   = yawRate
+        self.cmdHoverMsg.zDistance = zDistance
+        self.cmdHoverPublisher.publish(self.cmdHoverMsg)
 
     def setLEDColor(self, r, g, b):
         """Sets the color of the LED ring deck.
